@@ -52,29 +52,45 @@ def verify_credentials(conn, username, password):
 
 def run_demo():
     database = "pythonsqlite.db"
-
     conn = create_connection(database)
 
     if conn is not None:
         create_table(conn)
 
         while True:
-            new_user = input("Create new account? (yes/no): ").lower()
-            if new_user == "yes":
+            print("\nMain Menu:")
+            print("1. Create new account")
+            print("2. Login")
+            print("3. Exit")
+
+            choice = input("Enter your choice: ")
+
+            if choice == "1":
                 username = input("Enter new username: ")
                 password = input("Enter new password: ")
                 store_credentials(conn, username, password)
-                continue
-
-            username = input("Enter username: ")
-            password = input("Enter password: ")
-            if verify_credentials(conn, username, password):
-                print("Successfully Logged In, exiting demo!")
+            elif choice == "2":
+                while True:
+                    username = input("Enter username: ")
+                    password = input("Enter password: ")
+                    if verify_credentials(conn, username, password):
+                        print("Successfully Logged In!")
+                        break
+                    else:
+                        print("Invalid credentials. Try again or close program.")
+                        try_again = input("Try again? (yes/no): ").lower()
+                        if try_again == "no":
+                            break
+                        elif try_again == "yes":
+                            print("Please try again!")
+                            continue
+                        else:
+                            print("Invalid input. Please enter 'yes' or 'no'.")
+            elif choice == "3":
+                print("Exiting the program.")
                 break
             else:
-                print("Invalid credentials. Try again or close program.")
-                if input("Try again? (yes/no): ").lower() != "yes":
-                    break
+                print("Invalid choice. Please try again.")
 
         conn.close()
     else:
